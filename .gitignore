@@ -1,0 +1,12 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+
+# Backup local e arquivos temporarios de verificacao
+/prisma/dev-backup.db
+/prisma/sqlite-initial.sql
+/verificar-banco.js
+/verificar-indices.js
+/verificar-integridade.js

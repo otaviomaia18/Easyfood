@@ -1,0 +1,1488 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyFood</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; border: none; }
+
+    .phone {
+      max-width: 1100px;
+      min-height: 100vh;
+      margin: auto;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #ff6b35;
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    header h1 { font-size: 26px; }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .header-actions button {
+      background: white;
+      color: #ff6b35;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    main { flex: 1; padding: 25px; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .welcome { text-align: center; padding: 35px 15px; }
+    .welcome h2 { font-size: 32px; margin-bottom: 12px; }
+    .welcome p { color: #666; margin-bottom: 22px; }
+
+    .primary-btn {
+      background: #ff6b35;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .secondary-btn {
+      background: #eee;
+      color: #333;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .form-container {
+      max-width: 450px;
+      margin: 25px auto;
+      padding: 25px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group { margin-bottom: 15px; }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .search-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus,
+    .search-input:focus {
+      border-color: #ff6b35;
+    }
+
+    .form-container button { width: 100%; margin-top: 8px; }
+
+    .form-link { text-align: center; margin-top: 18px; }
+
+    .form-link button {
+      width: auto;
+      background: transparent;
+      color: #ff6b35;
+      padding: 0;
+    }
+
+    .section-title { margin-bottom: 20px; }
+    .search-area { margin-bottom: 22px; }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .category-btn {
+      padding: 10px 16px;
+      border-radius: 20px;
+      background: #eee;
+    }
+
+    .category-btn.active {
+      background: #ff6b35;
+      color: white;
+    }
+
+    .restaurant-grid,
+    .dish-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .restaurant-card,
+    .dish-card {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .restaurant-img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .restaurant-info,
+    .dish-info { padding: 15px; }
+
+    .restaurant-info h3,
+    .dish-info h3 { margin-bottom: 8px; }
+
+    .restaurant-info p,
+    .dish-info p {
+      color: #666;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .dish-image {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .dish-price {
+      color: #16803c;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-actions button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 7px;
+      background: #ff6b35;
+      color: white;
+    }
+
+    .favorite-btn {
+      background: #eee !important;
+      color: #d83b50 !important;
+    }
+
+    .edit-dish-btn {
+      background: #2878c8 !important;
+      color: white !important;
+      margin-top: 8px;
+    }
+
+    .delete-dish-btn {
+      background: #dc3545 !important;
+      color: white !important;
+      margin-top: 8px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-image {
+      width: 75px;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cart-item-info { flex: 1; }
+    .cart-item-info p { margin-top: 5px; color: #666; }
+
+    .cart-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-controls button {
+      background: #eee;
+      padding: 7px 11px;
+      border-radius: 6px;
+    }
+
+    .cart-total {
+      text-align: right;
+      margin-top: 25px;
+      font-size: 22px;
+    }
+
+    .empty-message {
+      color: #777;
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .profile-info {
+      padding: 20px;
+      background: #f7f7f7;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .profile-info p { margin: 10px 0; }
+    .hidden { display: none !important; }
+
+    #menu-owner-actions {
+      margin: 15px 0 20px;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 18px;
+      margin-top: auto;
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 15px; }
+      header { padding: 15px; }
+      .welcome h2 { font-size: 25px; }
+      .cart-item { flex-wrap: wrap; }
+      .cart-controls {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="phone">
+
+  <header>
+    <h1>🍔 EasyFood</h1>
+    <div class="header-actions">
+      <button onclick="showSection('home')">Início</button>
+      <button onclick="showSection('restaurants')">Restaurantes</button>
+      <button onclick="showSection('favorites')">Favoritos</button>
+      <button onclick="showSection('cart')">Carrinho</button>
+      <button onclick="showSection('profile')">Perfil</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="home" class="section active">
+      <div class="welcome">
+        <h2>Bem-vindo ao EasyFood!</h2>
+        <p>Encontre seus restaurantes e pratos favoritos em um só lugar.</p>
+        <button class="primary-btn" onclick="showSection('restaurants')">
+          Explorar restaurantes
+        </button>
+      </div>
+
+      <div class="search-area">
+        <input type="text" id="home-search" class="search-input"
+          placeholder="Buscar restaurantes..."
+          oninput="searchRestaurants(this.value)">
+      </div>
+
+      <h2 class="section-title">Restaurantes disponíveis</h2>
+      <div id="home-restaurants" class="restaurant-grid"></div>
+    </section>
+
+    <section id="login" class="section">
+      <div class="form-container">
+        <h2>Entrar na conta</h2>
+        <form onsubmit="login(event)">
+          <div class="form-group">
+            <label for="login-email">E-mail</label>
+            <input type="email" id="login-email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" required>
+          </div>
+          <button class="primary-btn" type="submit">Entrar</button>
+        </form>
+        <div class="form-link">
+          Não tem conta?
+          <button onclick="showSection('register')">Cadastre-se</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="register" class="section">
+      <div class="form-container">
+        <h2>Criar conta</h2>
+        <form onsubmit="register(event)">
+          <div class="form-group">
+            <label for="register-name">Nome</label>
+            <input type="text" id="register-name" required>
+          </div>
+          <div class="form-group">
+            <label for="register-email">E-mail</label>
+            <input type="email" id="register-email" required>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Senha</label>
+            <input type="password" id="register-password" required>
+          </div>
+          <button class="primary-btn" type="submit">Cadastrar</button>
+        </form>
+        <div class="form-link">
+          Já tem conta?
+          <button onclick="showSection('login')">Entrar</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="restaurants" class="section">
+      <h2 class="section-title">Restaurantes</h2>
+      <div class="search-area">
+        <input type="text" id="restaurant-search" class="search-input"
+          placeholder="Buscar restaurante..."
+          oninput="searchRestaurants(this.value)">
+      </div>
+
+      <div class="categories">
+        <button class="category-btn active" onclick="filterCategory('Todos',this)">Todos</button>
+        <button class="category-btn" onclick="filterCategory('Brasileira',this)">Brasileira</button>
+        <button class="category-btn" onclick="filterCategory('Italiana',this)">Italiana</button>
+        <button class="category-btn" onclick="filterCategory('Japonesa',this)">Japonesa</button>
+        <button class="category-btn" onclick="filterCategory('Mexicana',this)">Mexicana</button>
+        <button class="category-btn" onclick="filterCategory('Hambúrguer',this)">Hambúrguer</button>
+      </div>
+
+      <div id="restaurant-list" class="restaurant-grid"></div>
+    </section>
+
+    <section id="favorites" class="section">
+      <h2 class="section-title">Meus favoritos</h2>
+      <div id="favorites-list" class="restaurant-grid"></div>
+    </section>
+
+    <section id="menu" class="section">
+      <button class="secondary-btn" onclick="showSection('restaurants')">
+        ← Voltar aos restaurantes
+      </button>
+
+      <h2 id="menu-title" class="section-title" style="margin-top:20px;">
+        Cardápio
+      </h2>
+
+      <div id="menu-owner-actions"></div>
+      <div id="menu-list" class="dish-grid"></div>
+    </section>
+
+    <section id="cart" class="section">
+      <h2 class="section-title">Meu carrinho</h2>
+      <div id="cart-list"></div>
+      <div class="cart-total">
+        <h3 id="cart-total">Total: R$ 0,00</h3>
+      </div>
+      <button class="primary-btn" onclick="checkout()" style="margin-top:20px;">
+        Finalizar pedido
+      </button>
+    </section>
+
+    <section id="profile" class="section">
+      <h2 class="section-title">Meu perfil</h2>
+      <div id="profile-content"></div>
+      <button class="secondary-btn" onclick="logout()">Sair da conta</button>
+    </section>
+
+    <section id="add-restaurant" class="section">
+      <div class="form-container">
+        <h2>Cadastrar restaurante</h2>
+        <form onsubmit="createRestaurant(event)">
+          <div class="form-group">
+            <label for="restaurant-name">Nome</label>
+            <input type="text" id="restaurant-name" required>
+          </div>
+          <div class="form-group">
+            <label for="restaurant-category">Categoria</label>
+            <input type="text" id="restaurant-category" required>
+          </div>
+          <div class="form-group">
+            <label for="restaurant-rating">Avaliação</label>
+            <input type="number" id="restaurant-rating" min="0" max="5" step="0.1" value="0">
+          </div>
+          <button class="primary-btn" type="submit">Cadastrar restaurante</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="add-dish" class="section">
+      <div class="form-container">
+        <h2 id="dish-form-title">Cadastrar prato</h2>
+
+        <p id="dish-restaurant-name" style="text-align:center; margin-bottom:18px; color:#666;"></p>
+
+        <form onsubmit="createDish(event)">
+          <div class="form-group">
+            <label for="dish-name">Nome do prato</label>
+            <input type="text" id="dish-name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="dish-category">Categoria</label>
+            <input type="text" id="dish-category" required>
+          </div>
+
+          <div class="form-group">
+            <label for="dish-description">Descrição</label>
+            <textarea id="dish-description" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dish-price">Preço</label>
+            <input type="number" id="dish-price" min="0" step="0.01" required>
+          </div>
+
+          <div class="form-group" id="dish-image-group">
+            <label for="dish-image">Imagem do prato</label>
+            <input type="file" id="dish-image" accept="image/*">
+            <p id="dish-image-note" style="font-size:12px; color:#777; margin-top:6px;"></p>
+          </div>
+
+          <button id="dish-submit-btn" class="primary-btn" type="submit">
+            Cadastrar prato
+          </button>
+
+          <button class="secondary-btn" type="button" onclick="returnToMenu()">
+            Voltar ao cardápio
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>EasyFood - Encontre sua próxima refeição.</p>
+  </footer>
+</div>
+
+<script>
+  const API_URL = "";
+
+  let restaurants = [];
+  let currentRestaurant = null;
+  let currentCategory = "Todos";
+  let editingDishId = null;
+
+  let cart = JSON.parse(localStorage.getItem("easyfood_cart")) || [];
+  let favorites = JSON.parse(localStorage.getItem("easyfood_favorites")) || [];
+
+  let currentUser = JSON.parse(localStorage.getItem("easyfood_user")) || null;
+  let token = localStorage.getItem("easyfood_token") || "";
+
+  function formatMoney(value) {
+    return Number(value || 0).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+  }
+
+  function getDishImage(name, category) {
+    const search = encodeURIComponent(`${name} ${category || ""} food`);
+    return `https://loremflickr.com/640/420/${search}`;
+  }
+
+  function createImage(url, alt, className) {
+    const image = document.createElement("img");
+    image.className = className;
+    image.alt = alt || "Imagem de comida";
+    image.loading = "lazy";
+    image.src = url || "https://placehold.co/640x420/f1f1f1/777?text=EasyFood";
+
+    image.onerror = () => {
+      image.onerror = null;
+      image.src = "https://placehold.co/640x420/f1f1f1/777?text=Foto+indisponivel";
+    };
+
+    return image;
+  }
+
+  function showSection(sectionId) {
+    document.querySelectorAll(".section").forEach(section => {
+      section.classList.remove("active");
+    });
+
+    const section = document.getElementById(sectionId);
+
+    if (section) section.classList.add("active");
+
+    if (sectionId === "home" || sectionId === "restaurants") {
+      loadRestaurants();
+    }
+
+    if (sectionId === "favorites") renderFavorites();
+    if (sectionId === "cart") renderCart();
+    if (sectionId === "profile") renderProfile();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function getAuthHeaders() {
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  async function loadRestaurants() {
+    try {
+      const response = await fetch(`${API_URL}/restaurants`);
+
+      if (!response.ok) {
+        throw new Error("Não foi possível carregar os restaurantes.");
+      }
+
+      restaurants = await response.json();
+      renderRestaurants();
+    } catch (error) {
+      console.error("Erro ao carregar restaurantes:", error);
+      document.getElementById("restaurant-list").innerHTML =
+        '<p class="empty-message">Não foi possível carregar os restaurantes.</p>';
+      document.getElementById("home-restaurants").innerHTML =
+        '<p class="empty-message">Não foi possível carregar os restaurantes.</p>';
+    }
+  }
+
+  function renderRestaurants(list = restaurants) {
+    const restaurantList = document.getElementById("restaurant-list");
+    const homeRestaurants = document.getElementById("home-restaurants");
+
+    restaurantList.innerHTML = "";
+    homeRestaurants.innerHTML = "";
+
+    if (!list.length) {
+      restaurantList.innerHTML =
+        '<p class="empty-message">Nenhum restaurante encontrado.</p>';
+      homeRestaurants.innerHTML =
+        '<p class="empty-message">Nenhum restaurante cadastrado ainda.</p>';
+      return;
+    }
+
+    list.forEach(restaurant => {
+      restaurantList.appendChild(createRestaurantCard(restaurant));
+      homeRestaurants.appendChild(createRestaurantCard(restaurant));
+    });
+  }
+
+  function createRestaurantCard(restaurant) {
+    const card = document.createElement("article");
+    card.className = "restaurant-card";
+
+    const image = createImage(
+      restaurant.imageUrl || getDishImage(restaurant.name, restaurant.category),
+      restaurant.name,
+      "restaurant-img"
+    );
+
+    const info = document.createElement("div");
+    info.className = "restaurant-info";
+
+    const title = document.createElement("h3");
+    title.textContent = restaurant.name;
+
+    const category = document.createElement("p");
+    category.textContent = restaurant.category || "Restaurante";
+
+    const rating = document.createElement("p");
+    rating.textContent = `⭐ ${restaurant.rating || "Sem avaliação"}`;
+
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+
+    const menuButton = document.createElement("button");
+    menuButton.textContent = "Ver cardápio";
+    menuButton.onclick = () => openRestaurantMenu(restaurant.id);
+
+    const favoriteButton = document.createElement("button");
+    favoriteButton.className = "favorite-btn";
+    favoriteButton.textContent = favorites.includes(restaurant.id)
+      ? "♥ Favorito"
+      : "♡ Favoritar";
+    favoriteButton.onclick = () => toggleFavorite(restaurant.id);
+
+    actions.append(menuButton, favoriteButton);
+    info.append(title, category, rating, actions);
+    card.append(image, info);
+
+    return card;
+  }
+
+  function searchRestaurants(searchText) {
+    const search = searchText.toLowerCase().trim();
+
+    const filtered = restaurants.filter(restaurant => {
+      const name = (restaurant.name || "").toLowerCase();
+      const category = (restaurant.category || "").toLowerCase();
+
+      const matchesSearch = name.includes(search) || category.includes(search);
+      const matchesCategory =
+        currentCategory === "Todos" ||
+        category.includes(currentCategory.toLowerCase());
+
+      return matchesSearch && matchesCategory;
+    });
+
+    renderRestaurants(filtered);
+
+    const homeSearch = document.getElementById("home-search");
+    const restaurantSearch = document.getElementById("restaurant-search");
+
+    if (document.activeElement === homeSearch && restaurantSearch) {
+      restaurantSearch.value = searchText;
+    } else if (document.activeElement === restaurantSearch && homeSearch) {
+      homeSearch.value = searchText;
+    }
+  }
+
+  function filterCategory(category, button) {
+    currentCategory = category;
+
+    document.querySelectorAll(".category-btn").forEach(item => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    searchRestaurants(document.getElementById("restaurant-search").value);
+  }
+
+  function toggleFavorite(restaurantId) {
+    if (favorites.includes(restaurantId)) {
+      favorites = favorites.filter(id => id !== restaurantId);
+    } else {
+      favorites.push(restaurantId);
+    }
+
+    localStorage.setItem("easyfood_favorites", JSON.stringify(favorites));
+    renderRestaurants();
+
+    if (document.getElementById("favorites").classList.contains("active")) {
+      renderFavorites();
+    }
+  }
+
+  function renderFavorites() {
+    const container = document.getElementById("favorites-list");
+    container.innerHTML = "";
+
+    const favoriteRestaurants = restaurants.filter(restaurant =>
+      favorites.includes(restaurant.id)
+    );
+
+    if (!favoriteRestaurants.length) {
+      container.innerHTML =
+        '<p class="empty-message">Você ainda não tem favoritos.</p>';
+      return;
+    }
+
+    favoriteRestaurants.forEach(restaurant => {
+      container.appendChild(createRestaurantCard(restaurant));
+    });
+  }
+
+  function isRestaurantOwner(restaurant) {
+    if (!restaurant || !currentUser || !token) return false;
+
+    return Number(restaurant.ownerId) === Number(currentUser.id);
+  }
+
+  function renderMenuOwnerActions() {
+    const container = document.getElementById("menu-owner-actions");
+    container.innerHTML = "";
+
+    if (!isRestaurantOwner(currentRestaurant)) return;
+
+    const button = document.createElement("button");
+    button.className = "primary-btn";
+    button.textContent = "＋ Adicionar prato";
+    button.onclick = openAddDishForm;
+
+    container.appendChild(button);
+  }
+
+  function resetDishForm() {
+    document.querySelector("#add-dish form").reset();
+
+    document.getElementById("dish-form-title").textContent =
+      "Cadastrar prato";
+
+    document.getElementById("dish-submit-btn").textContent =
+      "Cadastrar prato";
+
+    document.getElementById("dish-image-group").classList.remove("hidden");
+
+    document.getElementById("dish-image-note").textContent = "";
+
+    editingDishId = null;
+  }
+
+  function openAddDishForm() {
+    if (!isRestaurantOwner(currentRestaurant)) {
+      alert("Somente o proprietário pode cadastrar pratos neste restaurante.");
+      return;
+    }
+
+    resetDishForm();
+
+    document.getElementById("dish-restaurant-name").textContent =
+      `Restaurante: ${currentRestaurant.name}`;
+
+    showSection("add-dish");
+  }
+
+  function openEditDishForm(dish) {
+    if (!isRestaurantOwner(currentRestaurant)) {
+      alert("Somente o proprietário pode editar pratos neste restaurante.");
+      return;
+    }
+
+    resetDishForm();
+
+    editingDishId = dish.id;
+
+    document.getElementById("dish-form-title").textContent =
+      "Editar prato";
+
+    document.getElementById("dish-submit-btn").textContent =
+      "Salvar alterações";
+
+    document.getElementById("dish-name").value = dish.name || "";
+    document.getElementById("dish-category").value = dish.category || "";
+    document.getElementById("dish-description").value =
+      dish.description || "";
+    document.getElementById("dish-price").value = dish.price ?? "";
+
+    document.getElementById("dish-restaurant-name").textContent =
+      `Editando prato de: ${currentRestaurant.name}`;
+
+    document.getElementById("dish-image-group").classList.add("hidden");
+
+    showSection("add-dish");
+  }
+
+  function returnToMenu() {
+    if (!currentRestaurant) {
+      showSection("restaurants");
+      return;
+    }
+
+    openRestaurantMenu(currentRestaurant.id);
+  }
+
+  async function openRestaurantMenu(restaurantId) {
+    currentRestaurant = restaurants.find(
+      restaurant => restaurant.id === restaurantId
+    );
+
+    if (!currentRestaurant) {
+      alert("Restaurante não encontrado.");
+      return;
+    }
+
+    document.getElementById("menu-title").textContent =
+      `Cardápio - ${currentRestaurant.name}`;
+
+    renderMenuOwnerActions();
+
+    const container = document.getElementById("menu-list");
+    container.innerHTML =
+      '<p class="empty-message">Carregando cardápio...</p>';
+
+    showSection("menu");
+
+    try {
+      const response = await fetch(
+        `${API_URL}/restaurants/${restaurantId}/dishes`
+      );
+
+      if (!response.ok) {
+        throw new Error("Não foi possível carregar o cardápio.");
+      }
+
+      const dishes = await response.json();
+      renderDishes(dishes);
+    } catch (error) {
+      console.error("Erro ao carregar cardápio:", error);
+      container.innerHTML =
+        '<p class="empty-message">Não foi possível carregar os pratos.</p>';
+    }
+  }
+
+  function renderDishes(dishes) {
+    const container = document.getElementById("menu-list");
+    container.innerHTML = "";
+
+    if (!dishes.length) {
+      container.innerHTML =
+        '<p class="empty-message">Este restaurante ainda não possui pratos cadastrados.</p>';
+      return;
+    }
+
+    dishes.forEach(dish => {
+      const card = document.createElement("article");
+      card.className = "dish-card";
+
+      const image = createImage(
+        dish.imageUrl || getDishImage(dish.name, dish.category),
+        dish.name,
+        "dish-image"
+      );
+
+      const info = document.createElement("div");
+      info.className = "dish-info";
+
+      const title = document.createElement("h3");
+      title.textContent = dish.name;
+
+      const description = document.createElement("p");
+      description.textContent =
+        dish.description || dish.category || "Prato disponível";
+
+      const price = document.createElement("div");
+      price.className = "dish-price";
+      price.textContent = formatMoney(dish.price);
+
+      const button = document.createElement("button");
+      button.className = "primary-btn";
+      button.textContent = "Adicionar ao carrinho";
+      button.onclick = () => addToCart(dish, currentRestaurant.id);
+
+      info.append(title, description, price, button);
+
+      if (isRestaurantOwner(currentRestaurant)) {
+        const editButton = document.createElement("button");
+        editButton.className = "edit-dish-btn";
+        editButton.textContent = "✏️ Editar prato";
+        editButton.style.width = "100%";
+        editButton.style.padding = "10px";
+        editButton.style.borderRadius = "7px";
+        editButton.style.cursor = "pointer";
+        editButton.onclick = () => openEditDishForm(dish);
+
+        info.appendChild(editButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-dish-btn";
+        deleteButton.textContent = "🗑️ Excluir prato";
+        deleteButton.style.width = "100%";
+        deleteButton.style.padding = "10px";
+        deleteButton.style.borderRadius = "7px";
+        deleteButton.style.cursor = "pointer";
+        deleteButton.onclick = () => deleteDish(dish);
+
+        info.appendChild(deleteButton);
+      }
+
+      card.append(image, info);
+      container.appendChild(card);
+    });
+  }
+
+  async function deleteDish(dish) {
+    if (!token || !currentUser) {
+      alert("Entre na sua conta para excluir pratos.");
+      showSection("login");
+      return;
+    }
+
+    if (!currentRestaurant || !isRestaurantOwner(currentRestaurant)) {
+      alert("Você não tem permissão para excluir pratos neste restaurante.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `Tem certeza que deseja excluir o prato "${dish.name}"?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `${API_URL}/dishes/${dish.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            ...getAuthHeaders()
+          }
+        }
+      );
+
+      if (!response.ok) {
+        let data = {};
+
+        try {
+          data = await response.json();
+        } catch (error) {
+          // Resposta sem conteúdo JSON.
+        }
+
+        throw new Error(
+          data.error || "Não foi possível excluir o prato."
+        );
+      }
+
+      cart = cart.filter(item =>
+        !(item.id === dish.id &&
+          item.restaurantId === currentRestaurant.id)
+      );
+
+      saveCart();
+
+      alert("Prato excluído com sucesso!");
+
+      await openRestaurantMenu(currentRestaurant.id);
+
+    } catch (error) {
+      console.error("Erro ao excluir prato:", error);
+      alert(error.message || "Erro ao excluir prato.");
+    }
+  }
+
+  function addToCart(dish, restaurantId) {
+    const existingItem = cart.find(item =>
+      item.id === dish.id && item.restaurantId === restaurantId
+    );
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({
+        id: dish.id,
+        name: dish.name,
+        price: Number(dish.price),
+        category: dish.category || "",
+        image: dish.imageUrl || getDishImage(dish.name, dish.category),
+        restaurantId,
+        quantity: 1
+      });
+    }
+
+    saveCart();
+    alert(`${dish.name} foi adicionado ao carrinho!`);
+  }
+
+  function saveCart() {
+    localStorage.setItem("easyfood_cart", JSON.stringify(cart));
+  }
+
+  function renderCart() {
+    const container = document.getElementById("cart-list");
+    const totalElement = document.getElementById("cart-total");
+    container.innerHTML = "";
+
+    if (!cart.length) {
+      container.innerHTML =
+        '<p class="empty-message">Seu carrinho está vazio.</p>';
+      totalElement.textContent = "Total: R$ 0,00";
+      return;
+    }
+
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price * item.quantity;
+
+      const row = document.createElement("div");
+      row.className = "cart-item";
+
+      const image = createImage(item.image, item.name, "cart-image");
+
+      const info = document.createElement("div");
+      info.className = "cart-item-info";
+
+      const name = document.createElement("h3");
+      name.textContent = item.name;
+
+      const price = document.createElement("p");
+      price.textContent = formatMoney(item.price);
+
+      const subtotal = document.createElement("p");
+      subtotal.textContent =
+        `Subtotal: ${formatMoney(item.price * item.quantity)}`;
+
+      info.append(name, price, subtotal);
+
+      const controls = document.createElement("div");
+      controls.className = "cart-controls";
+
+      const decrease = document.createElement("button");
+      decrease.textContent = "-";
+      decrease.onclick = () => changeQuantity(index, -1);
+
+      const quantity = document.createElement("span");
+      quantity.textContent = item.quantity;
+
+      const increase = document.createElement("button");
+      increase.textContent = "+";
+      increase.onclick = () => changeQuantity(index, 1);
+
+      const remove = document.createElement("button");
+      remove.textContent = "Remover";
+      remove.onclick = () => removeCartItem(index);
+
+      controls.append(decrease, quantity, increase, remove);
+      row.append(image, info, controls);
+      container.appendChild(row);
+    });
+
+    totalElement.textContent = `Total: ${formatMoney(total)}`;
+  }
+
+  function changeQuantity(index, amount) {
+    if (!cart[index]) return;
+
+    cart[index].quantity += amount;
+
+    if (cart[index].quantity <= 0) cart.splice(index, 1);
+
+    saveCart();
+    renderCart();
+  }
+
+  function removeCartItem(index) {
+    cart.splice(index, 1);
+    saveCart();
+    renderCart();
+  }
+
+  async function checkout() {
+    if (!cart.length) {
+      alert("Seu carrinho está vazio.");
+      return;
+    }
+
+    if (!token) {
+      alert("Entre na sua conta para continuar.");
+      showSection("login");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders()
+        },
+        body: JSON.stringify({
+          items: cart.map(item => ({
+            dishId: item.id,
+            quantity: item.quantity
+          }))
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Não foi possível finalizar o pedido."
+        );
+      }
+
+      cart = [];
+      saveCart();
+      renderCart();
+
+      alert(
+        `Pedido realizado com sucesso!\n\n` +
+        `Número do pedido: #${data.id}\n` +
+        `Total: ${formatMoney(Number(data.total))}\n` +
+        `Status: ${data.status}`
+      );
+
+    } catch (error) {
+      console.error("Erro ao finalizar pedido:", error);
+      alert(error.message || "Erro ao finalizar o pedido.");
+    }
+  }
+
+  async function register(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("register-name").value.trim();
+    const email = document.getElementById("register-email").value.trim();
+    const password = document.getElementById("register-password").value;
+
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao cadastrar.");
+      }
+
+      alert("Cadastro realizado! Agora entre na sua conta.");
+      event.target.reset();
+      showSection("login");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function login(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Não foi possível entrar.");
+      }
+
+      token = data.token;
+      currentUser = data.user;
+
+      localStorage.setItem("easyfood_token", token);
+      localStorage.setItem("easyfood_user", JSON.stringify(currentUser));
+
+      event.target.reset();
+
+      alert(`Bem-vindo, ${currentUser.name}!`);
+      showSection("profile");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function renderProfile() {
+    const container = document.getElementById("profile-content");
+
+    if (!currentUser || !token) {
+      container.innerHTML = `
+        <div class="profile-info">
+          <p>Você ainda não entrou na sua conta.</p>
+        </div>
+        <button class="primary-btn" onclick="showSection('login')">Entrar</button>
+        <button class="secondary-btn" onclick="showSection('register')">Criar conta</button>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="profile-info">
+        <h3>Minha conta</h3>
+        <p><strong>Nome:</strong> ${escapeHTML(currentUser.name)}</p>
+        <p><strong>E-mail:</strong> ${escapeHTML(currentUser.email)}</p>
+      </div>
+
+      <button class="primary-btn" onclick="showSection('add-restaurant')">
+        Cadastrar restaurante
+      </button>
+
+      <h3 style="margin-top:30px; margin-bottom:15px;">
+        Histórico de pedidos
+      </h3>
+
+      <div id="order-history">
+        <p class="empty-message">Carregando pedidos...</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch(`${API_URL}/orders`, {
+        method: "GET",
+        headers: {
+          ...getAuthHeaders()
+        }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Não foi possível carregar os pedidos.");
+      }
+
+      const history = document.getElementById("order-history");
+
+      if (!data.length) {
+        history.innerHTML =
+          '<p class="empty-message">Você ainda não realizou pedidos.</p>';
+        return;
+      }
+
+      history.innerHTML = data.map(order => {
+        const date = new Date(order.createdAt).toLocaleString("pt-BR");
+
+        const items = order.items.map(item => `
+          <p style="margin:8px 0; color:#555;">
+            ${escapeHTML(item.dishName)}
+            - ${item.quantity}x
+            (${formatMoney(item.unitPrice)})
+          </p>
+        `).join("");
+
+        return `
+          <div class="profile-info" style="margin-top:15px;">
+            <h3>Pedido #${order.id}</h3>
+            <p><strong>Data:</strong> ${date}</p>
+            <p><strong>Status:</strong> ${escapeHTML(order.status)}</p>
+            ${items}
+            <p style="margin-top:12px; color:#16803c;">
+              <strong>Total: ${formatMoney(order.total)}</strong>
+            </p>
+          </div>
+        `;
+      }).join("");
+
+    } catch (error) {
+      console.error("Erro ao carregar histórico:", error);
+
+      const history = document.getElementById("order-history");
+
+      if (history) {
+        history.innerHTML =
+          '<p class="empty-message">Não foi possível carregar seu histórico de pedidos.</p>';
+      }
+    }
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => {
+      const replacements = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
+      return replacements[character];
+    });
+  }
+
+  function logout() {
+    token = "";
+    currentUser = null;
+
+    localStorage.removeItem("easyfood_token");
+    localStorage.removeItem("easyfood_user");
+
+    alert("Você saiu da sua conta.");
+    showSection("home");
+  }
+
+  async function createRestaurant(event) {
+    event.preventDefault();
+
+    if (!token) {
+      alert("Entre na sua conta para cadastrar um restaurante.");
+      showSection("login");
+      return;
+    }
+
+    const name = document.getElementById("restaurant-name").value.trim();
+    const category = document.getElementById("restaurant-category").value.trim();
+    const rating = Number(document.getElementById("restaurant-rating").value);
+
+    try {
+      const response = await fetch(`${API_URL}/restaurants`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders()
+        },
+        body: JSON.stringify({ name, category, rating })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao cadastrar restaurante.");
+      }
+
+      alert("Restaurante cadastrado com sucesso!");
+      event.target.reset();
+
+      await loadRestaurants();
+      showSection("restaurants");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function createDish(event) {
+    event.preventDefault();
+
+    if (!token || !currentUser) {
+      alert("Entre na sua conta para cadastrar pratos.");
+      showSection("login");
+      return;
+    }
+
+    if (!currentRestaurant || !isRestaurantOwner(currentRestaurant)) {
+      alert("Você não tem permissão para cadastrar ou editar pratos neste restaurante.");
+      return;
+    }
+
+    const name = document.getElementById("dish-name").value.trim();
+    const category = document.getElementById("dish-category").value.trim();
+    const description = document.getElementById("dish-description").value.trim();
+    const price = Number(document.getElementById("dish-price").value);
+    const imageFile = document.getElementById("dish-image").files[0];
+
+    if (!name || !category || !Number.isFinite(price) || price < 0) {
+      alert("Preencha corretamente o nome, a categoria e o preço.");
+      return;
+    }
+
+    if (!editingDishId && imageFile && !imageFile.type.startsWith("image/")) {
+      alert("Selecione um arquivo de imagem válido.");
+      return;
+    }
+
+    if (!editingDishId && imageFile && imageFile.size > 5 * 1024 * 1024) {
+      alert("A imagem deve ter no máximo 5 MB.");
+      return;
+    }
+
+    const restaurantId = currentRestaurant.id;
+
+    try {
+      let response;
+
+      if (editingDishId !== null) {
+        response = await fetch(
+          `${API_URL}/dishes/${editingDishId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              ...getAuthHeaders()
+            },
+            body: JSON.stringify({
+              name,
+              category,
+              description,
+              price
+            })
+          }
+        );
+      } else {
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("category", category);
+        formData.append("description", description);
+        formData.append("price", String(price));
+
+        if (imageFile) {
+          formData.append("image", imageFile);
+        }
+
+        response = await fetch(
+          `${API_URL}/restaurants/${restaurantId}/dishes`,
+          {
+            method: "POST",
+            headers: {
+              ...getAuthHeaders()
+            },
+            body: formData
+          }
+        );
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+          (editingDishId !== null
+            ? "Erro ao editar prato."
+            : "Erro ao cadastrar prato.")
+        );
+      }
+
+      if (editingDishId !== null) {
+        alert("Prato atualizado com sucesso!");
+      } else {
+        alert("Prato cadastrado com sucesso!");
+      }
+
+      resetDishForm();
+
+      await openRestaurantMenu(restaurantId);
+
+    } catch (error) {
+      console.error("Erro ao salvar prato:", error);
+      alert(error.message || "Erro ao salvar prato.");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadRestaurants();
+
+    if (token && currentUser) renderProfile();
+
+    renderCart();
+  });
+</script>
+</body>
+</html>
